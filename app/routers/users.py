@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from app.limiter import limiter 
+from app.errors import limiter 
 from fastapi import Request
 from app.schemas import UserRegister, UserLogin, UserResponse, TokenResponse, ForgotPassword,ResetPassword
 from app.database import execute_query

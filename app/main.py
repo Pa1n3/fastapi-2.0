@@ -1,9 +1,15 @@
 from fastapi import FastAPI
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from app.limiter import limiter
+from app.errors  import limiter
 from app.models import create_tables
 from app.routers import users, notes, files
+from app.errors import (
+    AppError,
+    app_error_handler,
+    not_found_handler,
+    server_error_handler
+)
 
 
 
@@ -14,6 +20,10 @@ app = FastAPI(
 )
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.add_exception_handler(AppError, app_error_handler)
+app.add_exception_handler(404, not_found_handler)
+app.add_exception_handler(500, server_error_handler)
 # Create tables on startup
 @app.on_event("startup")
 def startup():
